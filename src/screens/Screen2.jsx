@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Screen2.module.css";
 
 const asset = (name) => `/screen2/${encodeURIComponent(name)}`;
@@ -12,6 +12,8 @@ export default function Screen2() {
   const [phase, setPhase] = useState("idle"); // 'idle' | 'line1' | 'line2'
   const [visibleLength, setVisibleLength] = useState(0);
   const [currentLine, setCurrentLine] = useState(LINE1);
+  const [birdMouthOpen, setBirdMouthOpen] = useState(false);
+  const mouthIntervalRef = useRef(null);
 
   useEffect(() => {
     const t = requestAnimationFrame(() => {
@@ -52,6 +54,33 @@ export default function Screen2() {
     return () => clearTimeout(tick);
   }, [phase, visibleLength]);
 
+  // Start/stop bird mouth alternating when phase changes (don't depend on visibleLength or we clear every letter)
+  useEffect(() => {
+    if (phase !== "line1" && phase !== "line2") {
+      if (mouthIntervalRef.current) clearInterval(mouthIntervalRef.current);
+      mouthIntervalRef.current = null;
+      setBirdMouthOpen(false);
+      return;
+    }
+    mouthIntervalRef.current = setInterval(() => {
+      setBirdMouthOpen((prev) => !prev);
+    }, 120);
+    return () => {
+      if (mouthIntervalRef.current) clearInterval(mouthIntervalRef.current);
+      mouthIntervalRef.current = null;
+    };
+  }, [phase]);
+
+  // Stop mouth animation when typing finishes for current line
+  useEffect(() => {
+    const len = phase === "line1" ? LINE1.length : phase === "line2" ? LINE2.length : 0;
+    if ((phase === "line1" || phase === "line2") && visibleLength >= len) {
+      if (mouthIntervalRef.current) clearInterval(mouthIntervalRef.current);
+      mouthIntervalRef.current = null;
+      setBirdMouthOpen(false);
+    }
+  }, [phase, visibleLength]);
+
   const displayText = currentLine.slice(0, visibleLength);
 
   return (
@@ -64,7 +93,11 @@ export default function Screen2() {
         <img src={asset("sc2 bird bg.png")} alt="" aria-hidden />
       </div>
       <div className={styles.birdClose}>
-        <img src={asset("sc2 bird close.png")} alt="" aria-hidden />
+        <img
+          src={asset(birdMouthOpen ? "sc2 bird open.png" : "sc2 bird close.png")}
+          alt=""
+          aria-hidden
+        />
       </div>
       <div className={styles.textBanner}>
         <img src={asset("text banner.png")} alt="" aria-hidden />
