@@ -224,6 +224,6 @@
 
 .screen.animate .startButton {
   opacity: 0;
-  animation: fadeIn 0.7s ease-out 3.3s forwards;
+  animation: fadeIn 1.2s ease-in-out 3.6s forwards;
   pointer-events: auto;
 }
