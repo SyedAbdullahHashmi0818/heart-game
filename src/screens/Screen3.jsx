@@ -6,8 +6,9 @@ const asset = (name) => `/screen3/${encodeURIComponent(name)}`;
 const BASKET_MIN_X = 15;
 const BASKET_MAX_X = 85;
 const BASKET_STEP = 3;
+const BASKET_LERP = 0.09; // smooth follow toward target (0–1, lower = smoother/slower)
 
-const FALL_SPEED = 0.35; // % per frame
+const FALL_SPEED = 0.6; // % per frame (faster = harder)
 const SPAWN_INTERVAL_MS = 2200;
 const SPAWN_X_MIN = 8;
 const SPAWN_X_MAX = 92;
@@ -28,6 +29,7 @@ function spawnItem() {
 
 export default function Screen3() {
   const [basketX, setBasketX] = useState(50);
+  const [targetBasketX, setTargetBasketX] = useState(50);
   const [leftPressed, setLeftPressed] = useState(false);
   const [rightPressed, setRightPressed] = useState(false);
   const [falling, setFalling] = useState([]);
@@ -35,18 +37,20 @@ export default function Screen3() {
   const [flowersPlaced, setFlowersPlaced] = useState(0);
   const rafRef = useRef(null);
   const basketXRef = useRef(50);
+  const targetBasketXRef = useRef(50);
   const lastSpawnRef = useRef(0);
   const fallingRef = useRef([]);
 
   basketXRef.current = basketX;
+  targetBasketXRef.current = targetBasketX;
   fallingRef.current = falling;
 
   const moveLeft = useCallback(() => {
-    setBasketX((x) => Math.max(BASKET_MIN_X, x - BASKET_STEP));
+    setTargetBasketX((x) => Math.max(BASKET_MIN_X, x - BASKET_STEP));
   }, []);
 
   const moveRight = useCallback(() => {
-    setBasketX((x) => Math.min(BASKET_MAX_X, x + BASKET_STEP));
+    setTargetBasketX((x) => Math.min(BASKET_MAX_X, x + BASKET_STEP));
   }, []);
 
   useEffect(() => {
@@ -101,17 +105,30 @@ export default function Screen3() {
     };
   }, []);
 
-  // Game loop: fall and collision (run synchronously so placeholders update immediately on catch)
+  // Game loop: smooth basket movement, fall and collision
   useEffect(() => {
     const loop = () => {
-      const bx = basketXRef.current;
+      const target = targetBasketXRef.current;
+      const current = basketXRef.current;
+      const smoothed = current + (target - current) * BASKET_LERP;
+      const newBasketX = Math.round(smoothed * 100) / 100;
+      basketXRef.current = newBasketX;
+      setBasketX(newBasketX);
+
+      const bx = newBasketX;
       const prev = fallingRef.current;
       const next = [];
       let caughtHearts = 0;
       let caughtFlowers = 0;
+      let missedHearts = 0;
+      let missedFlowers = 0;
       for (const item of prev) {
         const newY = item.y + FALL_SPEED;
-        if (newY > 95) continue;
+        if (newY > 95) {
+          if (item.type === "heart") missedHearts++;
+          else missedFlowers++;
+          continue;
+        }
         const inBasketX = item.x >= bx + BASKET_CATCH_LEFT && item.x <= bx + BASKET_CATCH_RIGHT;
         const inBasketY = newY >= BASKET_CATCH_TOP && newY <= BASKET_CATCH_BOTTOM;
         if (inBasketX && inBasketY) {
@@ -125,6 +142,8 @@ export default function Screen3() {
       setFalling(next);
       if (caughtHearts > 0) setHeartsPlaced((p) => Math.min(6, p + caughtHearts));
       if (caughtFlowers > 0) setFlowersPlaced((p) => Math.min(2, p + caughtFlowers));
+      if (missedHearts > 0) setHeartsPlaced((p) => Math.max(0, p - missedHearts));
+      if (missedFlowers > 0) setFlowersPlaced((p) => Math.max(0, p - missedFlowers));
       rafRef.current = requestAnimationFrame(loop);
     };
     rafRef.current = requestAnimationFrame(loop);

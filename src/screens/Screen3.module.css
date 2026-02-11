@@ -104,11 +104,11 @@
   position: absolute;
   bottom: 8%;
   z-index: 3;
-  transition: left 0.05s linear;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   pointer-events: none;
+  will-change: left;
 }
 
 .basketImg {
