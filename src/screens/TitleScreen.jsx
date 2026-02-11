@@ -3,7 +3,7 @@ import styles from "./TitleScreen.module.css";
 
 const asset = (name) => `/screen1/${encodeURIComponent(name)}`;
 
-export default function TitleScreen() {
+export default function TitleScreen({ onStart }) {
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
@@ -45,7 +45,12 @@ export default function TitleScreen() {
             />
           </div>
         </div>
-        <button type="button" className={styles.startButton} aria-label="Start">
+        <button 
+          type="button" 
+          className={styles.startButton} 
+          aria-label="Start"
+          onClick={onStart}
+        >
           <img src={asset("start button.png")} alt="Start" />
         </button>
       </div>
