@@ -1,0 +1,229 @@
+.screen {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  background: url("/screen1/bg.png") center/cover no-repeat;
+  z-index: 0;
+}
+
+.clouds {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -70%);
+  width: 120%;
+  max-width: 1400px;
+  height: 55%;
+  max-height: 65vh;
+  background: url("/screen1/clouds%20b.png") center/contain no-repeat;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.dragons {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 1100px;
+  height: 80%;
+  max-height: 75vh;
+  background: url("/screen1/dragons.png") center/contain no-repeat;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.centerColumn {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: min(92vw, 520px);
+  padding: 0 1rem;
+}
+
+.centerHeart {
+  margin-bottom: -20%;
+  max-width: 80%;
+  flex-shrink: 0;
+}
+
+.centerHeart img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.banner {
+  position: relative;
+  width: 140%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(140px);
+}
+
+.bannerBg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bannerBg img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.bannerContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15em;
+  width: 100%;
+  padding: 8% 0;
+  transform: translateY(10px);
+}
+
+.forSinnan,
+.forAmina {
+  width: 50%;
+  height: auto;
+  object-fit: contain;
+  transform: translateY(-60px);
+}
+
+.smallHeart {
+  width: 10%;
+  height: auto;
+  object-fit: contain;
+  margin-top: 0.7rem;
+  margin-bottom: 0.7rem;
+  transform: translateY(-60px);
+}
+
+.startButton {
+  margin-top: -2%;
+  max-width: 42%;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  transform: translateY(40px);
+}
+
+.startButton:hover {
+  transform: scale(1.05);
+}
+
+.startButton:active {
+  transform: scale(0.98);
+}
+
+.startButton img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ---- Entrance animations (no layout/position changes) ---- */
+
+/* Initial: only dragons and clouds visible; center column content hidden */
+.screen:not(.animate) .centerHeart,
+.screen:not(.animate) .banner,
+.screen:not(.animate) .startButton {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Clouds: in from top edge */
+@keyframes cloudsIn {
+  from {
+    transform: translate(-50%, -170%);
+  }
+  to {
+    transform: translate(-50%, -70%);
+  }
+}
+
+/* Dragons: in from bottom edge */
+@keyframes dragonsIn {
+  from {
+    transform: translate(-50%, 50%);
+  }
+  to {
+    transform: translate(-50%, -50%);
+  }
+}
+
+.screen.animate .clouds {
+  animation: cloudsIn 1.8s ease-out forwards;
+}
+
+.screen.animate .dragons {
+  animation: dragonsIn 1.8s ease-out forwards;
+}
+
+/* Center column: fade in after dragons, with stagger (1.8s base + 500ms each) */
+@keyframes centerHeartIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.screen.animate .centerHeart {
+  opacity: 0;
+  animation: centerHeartIn 0.8s ease-out 1.8s forwards;
+  pointer-events: auto;
+}
+
+.screen.animate .banner {
+  opacity: 0;
+  animation: fadeIn 0.7s ease-out 2.3s forwards;
+  pointer-events: auto;
+}
+
+.screen.animate .bannerContent {
+  opacity: 0;
+  animation: fadeIn 0.7s ease-out 2.8s forwards;
+}
+
+.screen.animate .startButton {
+  opacity: 0;
+  animation: fadeIn 0.7s ease-out 3.3s forwards;
+  pointer-events: auto;
+}
