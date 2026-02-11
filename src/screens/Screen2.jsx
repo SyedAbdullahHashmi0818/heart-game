@@ -7,7 +7,7 @@ const LINE1 = "Greetings Traveller!";
 const LINE2 = "I bring forth a challenge of great adversary!";
 const TYPING_MS_PER_CHAR = 80;
 
-export default function Screen2() {
+export default function Screen2({ onProceed }) {
   const [animating, setAnimating] = useState(false);
   const [phase, setPhase] = useState("idle"); // 'idle' | 'line1' | 'line2'
   const [visibleLength, setVisibleLength] = useState(0);
@@ -124,6 +124,7 @@ export default function Screen2() {
         type="button"
         className={styles.proceedButton}
         aria-label="Proceed"
+        onClick={onProceed}
       >
         <img src={asset("proceed button.png")} alt="Proceed" />
       </button>
