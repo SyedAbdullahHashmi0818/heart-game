@@ -5,14 +5,17 @@ const asset = (name) => `/screen2/${encodeURIComponent(name)}`;
 
 const LINE1 = "Greetings Traveller!";
 const LINE2 = "I bring forth a challenge of great adversary!";
+const LINE3 = "Thou must collect 6 hearts and 2 flowers using thine arrow keys";
 const TYPING_MS_PER_CHAR = 80;
+const PAUSE_BEFORE_NEXT_MS = 1500;
 
 export default function Screen2({ onProceed }) {
   const [animating, setAnimating] = useState(false);
-  const [phase, setPhase] = useState("idle"); // 'idle' | 'line1' | 'line2'
+  const [phase, setPhase] = useState("idle"); // 'idle' | 'line1' | 'line2' | 'line3'
   const [visibleLength, setVisibleLength] = useState(0);
   const [currentLine, setCurrentLine] = useState(LINE1);
   const [birdMouthOpen, setBirdMouthOpen] = useState(false);
+  const [showProceedButton, setShowProceedButton] = useState(false);
   const mouthIntervalRef = useRef(null);
 
   useEffect(() => {
@@ -35,16 +38,31 @@ export default function Screen2({ onProceed }) {
 
   // Type current line letter by letter
   useEffect(() => {
-    if (phase !== "line1" && phase !== "line2") return;
-    const text = phase === "line1" ? LINE1 : LINE2;
+    if (phase !== "line1" && phase !== "line2" && phase !== "line3") return;
+    const text = phase === "line1" ? LINE1 : phase === "line2" ? LINE2 : LINE3;
     if (visibleLength >= text.length) {
       if (phase === "line1") {
         const switchToSecond = setTimeout(() => {
           setPhase("line2");
           setCurrentLine(LINE2);
           setVisibleLength(0);
-        }, 1500);
+        }, PAUSE_BEFORE_NEXT_MS);
         return () => clearTimeout(switchToSecond);
+      }
+      if (phase === "line2") {
+        const switchToThird = setTimeout(() => {
+          setPhase("line3");
+          setCurrentLine(LINE3);
+          setVisibleLength(0);
+        }, PAUSE_BEFORE_NEXT_MS);
+        return () => clearTimeout(switchToThird);
+      }
+      if (phase === "line3") {
+        // Show proceed button after third line finishes
+        setTimeout(() => {
+          setShowProceedButton(true);
+        }, PAUSE_BEFORE_NEXT_MS);
+        return;
       }
       return;
     }
@@ -56,7 +74,7 @@ export default function Screen2({ onProceed }) {
 
   // Start/stop bird mouth alternating when phase changes (don't depend on visibleLength or we clear every letter)
   useEffect(() => {
-    if (phase !== "line1" && phase !== "line2") {
+    if (phase !== "line1" && phase !== "line2" && phase !== "line3") {
       if (mouthIntervalRef.current) clearInterval(mouthIntervalRef.current);
       mouthIntervalRef.current = null;
       setBirdMouthOpen(false);
@@ -73,8 +91,8 @@ export default function Screen2({ onProceed }) {
 
   // Stop mouth animation when typing finishes for current line
   useEffect(() => {
-    const len = phase === "line1" ? LINE1.length : phase === "line2" ? LINE2.length : 0;
-    if ((phase === "line1" || phase === "line2") && visibleLength >= len) {
+    const len = phase === "line1" ? LINE1.length : phase === "line2" ? LINE2.length : phase === "line3" ? LINE3.length : 0;
+    if ((phase === "line1" || phase === "line2" || phase === "line3") && visibleLength >= len) {
       if (mouthIntervalRef.current) clearInterval(mouthIntervalRef.current);
       mouthIntervalRef.current = null;
       setBirdMouthOpen(false);
@@ -102,16 +120,18 @@ export default function Screen2({ onProceed }) {
       <div className={styles.textBanner}>
         <img src={asset("text banner.png")} alt="" aria-hidden />
         <div className={styles.bannerText}>
-          {(phase === "line1" || phase === "line2") && (
+          {(phase === "line1" || phase === "line2" || phase === "line3") && (
             <p
               className={
-                phase === "line1" ? styles.bannerLine1 : styles.bannerLine2
+                phase === "line1" ? styles.bannerLine1 : phase === "line2" ? styles.bannerLine2 : styles.bannerLine3
               }
             >
               {displayText}
               {(phase === "line1"
                 ? visibleLength < LINE1.length
-                : visibleLength < LINE2.length) && (
+                : phase === "line2"
+                ? visibleLength < LINE2.length
+                : visibleLength < LINE3.length) && (
                 <span className={styles.cursor} aria-hidden>
                   |
                 </span>
@@ -120,14 +140,16 @@ export default function Screen2({ onProceed }) {
           )}
         </div>
       </div>
-      <button
-        type="button"
-        className={styles.proceedButton}
-        aria-label="Proceed"
-        onClick={onProceed}
-      >
-        <img src={asset("proceed button.png")} alt="Proceed" />
-      </button>
+      {showProceedButton && (
+        <button
+          type="button"
+          className={styles.proceedButton}
+          aria-label="Proceed"
+          onClick={onProceed}
+        >
+          <img src={asset("proceed button.png")} alt="Proceed" />
+        </button>
+      )}
     </div>
   );
 }

@@ -169,7 +169,8 @@
 }
 
 .bannerLine1,
-.bannerLine2 {
+.bannerLine2,
+.bannerLine3 {
   margin: 0;
   font-family: "Cinzel", "MedievalSharp", serif;
   font-weight: 700;
@@ -262,8 +263,12 @@
 .screen:not(.animate) .birdBg,
 .screen:not(.animate) .birdClose,
 .screen:not(.animate) .textBanner,
-.screen:not(.animate) .bannerText,
-.screen:not(.animate) .proceedButton {
+.screen:not(.animate) .bannerText {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.proceedButton {
   opacity: 0;
   pointer-events: none;
 }
@@ -342,6 +347,6 @@
 
 .screen.animate .proceedButton {
   opacity: 0;
-  animation: fadeIn 2s ease-in-out 10s forwards;
+  animation: fadeIn 0.6s ease-out forwards;
   pointer-events: auto;
 }
