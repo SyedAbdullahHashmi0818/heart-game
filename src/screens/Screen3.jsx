@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Screen3.module.css";
+import { playCollectSound } from "../utils/sounds";
 
 const asset = (name) => `/screen3/${encodeURIComponent(name)}`;
 
@@ -150,11 +151,13 @@ export default function Screen3({ onComplete }) {
       let newFlowers = flowersPlacedRef.current;
       
       if (caughtHearts > 0) {
+        playCollectSound();
         newHearts = Math.min(6, newHearts + caughtHearts);
         setHeartsPlaced(newHearts);
         heartsPlacedRef.current = newHearts;
       }
       if (caughtFlowers > 0) {
+        playCollectSound();
         newFlowers = Math.min(2, newFlowers + caughtFlowers);
         setFlowersPlaced(newFlowers);
         flowersPlacedRef.current = newFlowers;

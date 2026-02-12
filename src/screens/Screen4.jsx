@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Screen4.module.css";
+import { playButtonSound, playVoiceSound } from "../utils/sounds";
 
 const assetScreen2 = (name) => `/screen2/${encodeURIComponent(name)}`;
 const assetScreen4 = (name) => `/screen4/${encodeURIComponent(name)}`;
@@ -88,6 +89,8 @@ export default function Screen4() {
       setBirdMouthOpen(false);
       return;
     }
+    // Play voice sound when bird starts talking
+    playVoiceSound();
     mouthIntervalRef.current = setInterval(() => setBirdMouthOpen((prev) => !prev), 120);
     return () => {
       if (mouthIntervalRef.current) clearInterval(mouthIntervalRef.current);
@@ -159,6 +162,7 @@ export default function Screen4() {
           type="button"
           className={styles.rewardButton}
           aria-label="Reclaim your reward"
+          onClick={() => playButtonSound()}
         >
           <img src={assetScreen4("reward.png")} alt="Reclaim your reward" />
         </button>

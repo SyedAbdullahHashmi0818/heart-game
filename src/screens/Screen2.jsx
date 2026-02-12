@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Screen2.module.css";
+import { playButtonSound, playVoiceSound } from "../utils/sounds";
 
 const asset = (name) => `/screen2/${encodeURIComponent(name)}`;
 
@@ -80,6 +81,8 @@ export default function Screen2({ onProceed }) {
       setBirdMouthOpen(false);
       return;
     }
+    // Play voice sound when bird starts talking
+    playVoiceSound();
     mouthIntervalRef.current = setInterval(() => {
       setBirdMouthOpen((prev) => !prev);
     }, 120);
@@ -145,7 +148,10 @@ export default function Screen2({ onProceed }) {
           type="button"
           className={styles.proceedButton}
           aria-label="Proceed"
-          onClick={onProceed}
+          onClick={() => {
+            playButtonSound();
+            onProceed();
+          }}
         >
           <img src={asset("proceed button.png")} alt="Proceed" />
         </button>

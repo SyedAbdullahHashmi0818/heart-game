@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "./TitleScreen.module.css";
+import { playButtonSound } from "../utils/sounds";
 
 const asset = (name) => `/screen1/${encodeURIComponent(name)}`;
 
@@ -12,6 +13,11 @@ export default function TitleScreen({ onStart }) {
     });
     return () => cancelAnimationFrame(t);
   }, []);
+
+  const handleStart = () => {
+    playButtonSound();
+    onStart();
+  };
 
   return (
     <div className={`${styles.screen} ${animating ? styles.animate : ""}`}>
@@ -49,7 +55,7 @@ export default function TitleScreen({ onStart }) {
           type="button" 
           className={styles.startButton} 
           aria-label="Start"
-          onClick={onStart}
+          onClick={handleStart}
         >
           <img src={asset("start button.png")} alt="Start" />
         </button>
