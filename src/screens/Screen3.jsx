@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Screen3.module.css";
 import { playCollectSound } from "../utils/sounds";
+import Loader from "../components/Loader";
+import { preloadAllAssets } from "../utils/imagePreloader";
 
 const asset = (name) => `/screen3/${encodeURIComponent(name)}`;
 
@@ -29,6 +31,7 @@ function spawnItem() {
 }
 
 export default function Screen3({ onComplete }) {
+  const [isLoading, setIsLoading] = useState(true);
   const [basketX, setBasketX] = useState(50);
   const [targetBasketX, setTargetBasketX] = useState(50);
   const [leftPressed, setLeftPressed] = useState(false);
@@ -50,6 +53,31 @@ export default function Screen3({ onComplete }) {
   fallingRef.current = falling;
   heartsPlacedRef.current = heartsPlaced;
   flowersPlacedRef.current = flowersPlaced;
+
+  // Preload all assets
+  useEffect(() => {
+    const loadAssets = async () => {
+      await preloadAllAssets({
+        images: [
+          asset("heart.png"),
+          asset("heart place holder.png"),
+          asset("flowers placed.png"),
+          asset("flowers placeholder.png"),
+          asset("sc2 border twig.png"),
+          asset("droppable flowers.png"),
+          asset("basket.png"),
+          asset("left arrow key.png"),
+          asset("right arrow key.png"),
+        ],
+        backgrounds: [
+          "/screen3/sc%203%20bg.png",
+        ],
+      });
+      setIsLoading(false);
+    };
+
+    loadAssets();
+  }, []);
 
   const moveLeft = useCallback(() => {
     setTargetBasketX((x) => Math.max(BASKET_MIN_X, x - BASKET_STEP));
@@ -188,6 +216,10 @@ export default function Screen3({ onComplete }) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className={styles.screen}>

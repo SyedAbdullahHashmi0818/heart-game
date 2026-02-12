@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Screen2.module.css";
 import { playButtonSound, playVoiceSound } from "../utils/sounds";
+import Loader from "../components/Loader";
+import { preloadAllAssets } from "../utils/imagePreloader";
 
 const asset = (name) => `/screen2/${encodeURIComponent(name)}`;
 
@@ -12,6 +14,7 @@ const PAUSE_BEFORE_NEXT_MS = 1500;
 
 export default function Screen2({ onProceed }) {
   const [animating, setAnimating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [phase, setPhase] = useState("idle"); // 'idle' | 'line1' | 'line2' | 'line3'
   const [visibleLength, setVisibleLength] = useState(0);
   const [currentLine, setCurrentLine] = useState(LINE1);
@@ -19,11 +22,38 @@ export default function Screen2({ onProceed }) {
   const [showProceedButton, setShowProceedButton] = useState(false);
   const mouthIntervalRef = useRef(null);
 
+  // Preload all assets
   useEffect(() => {
-    const t = requestAnimationFrame(() => {
-      requestAnimationFrame(() => setAnimating(true));
-    });
-    return () => cancelAnimationFrame(t);
+    let animationFrameId = null;
+    
+    const loadAssets = async () => {
+      await preloadAllAssets({
+        images: [
+          asset("sc2 clouds.png"),
+          asset("sc2 bird bg.png"),
+          asset("sc2 bird open.png"),
+          asset("sc2 bird close.png"),
+          asset("text banner.png"),
+          asset("proceed button.png"),
+        ],
+        backgrounds: [
+          "/screen2/sc2 bg.png",
+        ],
+      });
+      setIsLoading(false);
+      // Start animation after a brief delay
+      animationFrameId = requestAnimationFrame(() => {
+        requestAnimationFrame(() => setAnimating(true));
+      });
+    };
+
+    loadAssets();
+    
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
   }, []);
 
   // Start typing first line after banner appears (2.8s)
@@ -103,6 +133,10 @@ export default function Screen2({ onProceed }) {
   }, [phase, visibleLength]);
 
   const displayText = currentLine.slice(0, visibleLength);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className={`${styles.screen} ${animating ? styles.animate : ""}`}>

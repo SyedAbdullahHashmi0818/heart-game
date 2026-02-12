@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Screen4.module.css";
 import { playButtonSound, playVoiceSound } from "../utils/sounds";
+import Loader from "../components/Loader";
+import { preloadAllAssets } from "../utils/imagePreloader";
 
 const assetScreen2 = (name) => `/screen2/${encodeURIComponent(name)}`;
 const assetScreen4 = (name) => `/screen4/${encodeURIComponent(name)}`;
@@ -13,6 +15,7 @@ const PAUSE_BEFORE_NEXT_MS = 1800;
 
 export default function Screen4() {
   const [animating, setAnimating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [birdMouthOpen, setBirdMouthOpen] = useState(false);
   const [phase, setPhase] = useState("idle"); // 'idle' | 'line1' | 'line2' | 'line3' | 'reward'
   const [visibleLength, setVisibleLength] = useState(0);
@@ -21,11 +24,41 @@ export default function Screen4() {
   const [showRewardButton, setShowRewardButton] = useState(false);
   const mouthIntervalRef = useRef(null);
 
+  // Preload all assets
   useEffect(() => {
-    const t = requestAnimationFrame(() => {
-      requestAnimationFrame(() => setAnimating(true));
-    });
-    return () => cancelAnimationFrame(t);
+    let animationFrameId = null;
+    
+    const loadAssets = async () => {
+      await preloadAllAssets({
+        images: [
+          assetScreen2("sc2 clouds.png"),
+          assetScreen2("sc2 bird bg.png"),
+          assetScreen2("sc2 bird open.png"),
+          assetScreen2("sc2 bird close.png"),
+          assetScreen2("text banner.png"),
+          assetScreen4("sun.png"),
+          assetScreen4("rabbit left.png"),
+          assetScreen4("rabbit right.png"),
+          assetScreen4("reward.png"),
+        ],
+        backgrounds: [
+          "/screen3/sc%203%20bg.png",
+        ],
+      });
+      setIsLoading(false);
+      // Start animation after a brief delay
+      animationFrameId = requestAnimationFrame(() => {
+        requestAnimationFrame(() => setAnimating(true));
+      });
+    };
+
+    loadAssets();
+    
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
   }, []);
 
   // Start typing first line after banner appears (2.8s)
@@ -112,6 +145,10 @@ export default function Screen4() {
   const showCursor = isTyping && visibleLength < currentText.length;
   const showBannerText = isTyping || phase === "reward";
   const bannerContent = phase === "reward" ? LINE3 : displayText;
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className={`${styles.screen} ${animating ? styles.animate : ""}`}>
