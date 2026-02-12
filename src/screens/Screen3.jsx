@@ -27,7 +27,7 @@ function spawnItem() {
   return { id: ++nextId, type, x, y };
 }
 
-export default function Screen3() {
+export default function Screen3({ onComplete }) {
   const [basketX, setBasketX] = useState(50);
   const [targetBasketX, setTargetBasketX] = useState(50);
   const [leftPressed, setLeftPressed] = useState(false);
@@ -40,10 +40,15 @@ export default function Screen3() {
   const targetBasketXRef = useRef(50);
   const lastSpawnRef = useRef(0);
   const fallingRef = useRef([]);
+  const heartsPlacedRef = useRef(0);
+  const flowersPlacedRef = useRef(0);
+  const completedRef = useRef(false);
 
   basketXRef.current = basketX;
   targetBasketXRef.current = targetBasketX;
   fallingRef.current = falling;
+  heartsPlacedRef.current = heartsPlaced;
+  flowersPlacedRef.current = flowersPlaced;
 
   const moveLeft = useCallback(() => {
     setTargetBasketX((x) => Math.max(BASKET_MIN_X, x - BASKET_STEP));
@@ -140,10 +145,39 @@ export default function Screen3() {
       }
       fallingRef.current = next;
       setFalling(next);
-      if (caughtHearts > 0) setHeartsPlaced((p) => Math.min(6, p + caughtHearts));
-      if (caughtFlowers > 0) setFlowersPlaced((p) => Math.min(2, p + caughtFlowers));
-      if (missedHearts > 0) setHeartsPlaced((p) => Math.max(0, p - missedHearts));
-      if (missedFlowers > 0) setFlowersPlaced((p) => Math.max(0, p - missedFlowers));
+      
+      let newHearts = heartsPlacedRef.current;
+      let newFlowers = flowersPlacedRef.current;
+      
+      if (caughtHearts > 0) {
+        newHearts = Math.min(6, newHearts + caughtHearts);
+        setHeartsPlaced(newHearts);
+        heartsPlacedRef.current = newHearts;
+      }
+      if (caughtFlowers > 0) {
+        newFlowers = Math.min(2, newFlowers + caughtFlowers);
+        setFlowersPlaced(newFlowers);
+        flowersPlacedRef.current = newFlowers;
+      }
+      if (missedHearts > 0) {
+        newHearts = Math.max(0, newHearts - missedHearts);
+        setHeartsPlaced(newHearts);
+        heartsPlacedRef.current = newHearts;
+      }
+      if (missedFlowers > 0) {
+        newFlowers = Math.max(0, newFlowers - missedFlowers);
+        setFlowersPlaced(newFlowers);
+        flowersPlacedRef.current = newFlowers;
+      }
+      
+      // Check for completion: 6 hearts and 2 flowers
+      if (!completedRef.current && newHearts === 6 && newFlowers === 2 && onComplete) {
+        completedRef.current = true;
+        setTimeout(() => {
+          onComplete();
+        }, 500);
+      }
+      
       rafRef.current = requestAnimationFrame(loop);
     };
     rafRef.current = requestAnimationFrame(loop);
