@@ -14,7 +14,7 @@ const assetScreen4 = (name) =>
   `${import.meta.env.BASE_URL}screen4/${encodeURIComponent(name)}`;
 
 const LINE1 = "Congratulations on finishing the trials";
-const LINE2 = "truly a master of collecting bouquet and hearts in a basket";
+const LINE2 = "truly a master of collecting bouquets and hearts in a basket";
 const LINE3 = "now reclaim your reward";
 const TYPING_MS_PER_CHAR = 70;
 const PAUSE_BEFORE_NEXT_MS = 1800;

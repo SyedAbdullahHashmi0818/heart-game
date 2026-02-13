@@ -13,7 +13,8 @@ const asset = (name) =>
 
 const LINE1 = "Greetings Traveller!";
 const LINE2 = "I bring forth a challenge of great adversary!";
-const LINE3 = "Thou must collect 6 hearts and 2 bouquet using thine arrow keys";
+const LINE3 =
+  "Thou must collect 6 hearts and 2 bouquets using thine arrow keys";
 const TYPING_MS_PER_CHAR = 80;
 const PAUSE_BEFORE_NEXT_MS = 1500;
 

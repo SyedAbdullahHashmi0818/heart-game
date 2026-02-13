@@ -264,3 +264,29 @@
   height: auto;
   object-fit: contain;
 }
+
+/* ---- Super smooth entrance: one-by-one with opacity transition ---- */
+/* Use visibility + transition so each layer fades in only when its .visible class is added. */
+
+.screen .borderAndBanner .border,
+.screen .borderAndBanner .banner,
+.screen .centerGroup img,
+.screen .birdBadges,
+.screen .birdProfiles,
+.screen .textAndSeal .text,
+.screen .textAndSeal .seal {
+  opacity: 0;
+  transition: opacity 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+}
+
+.screen .borderAndBanner .border.visible,
+.screen .borderAndBanner .banner.visible,
+.screen .centerGroup img.visible,
+.screen .birdBadges.visible,
+.screen .birdProfiles.visible,
+.screen .textAndSeal .text.visible,
+.screen .textAndSeal .seal.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
