@@ -1,0 +1,266 @@
+/* Screen 5 – layered in index order: bg, border+banner, center group, bird profiles, bird badges, text+seal */
+/* Tweak size and position below; z-index is left unchanged. */
+
+.screen {
+  --bg-width: 100%;
+  --bg-height: 100%;
+  --bg-object-fit: cover;
+
+  --border-max-width: 95%;
+  --border-max-height: 95%;
+  --border-top: 50%;
+  --border-left: 50%;
+  --border-transform: translate(-50%, -50%);
+
+  --banner-max-width: 70%;
+  --banner-max-height: 95%;
+  --banner-top: 55%;
+  --banner-left: 50%;
+  --banner-transform: translate(-50%, -50%);
+
+  --center-people-max-width: 50%;
+  --center-people-max-height: 50%;
+  --center-people-top: 55%;
+  --center-people-left: 48%;
+  --center-people-transform: translate(-50%, -50%);
+
+  --center-heart-max-width: 20%;
+  --center-heart-max-height: 20%;
+  --center-heart-top: 55%;
+  --center-heart-left: 50%;
+  --center-heart-transform: translate(-50%, -50%);
+
+  --flower-left-max-width: 25%;
+  --flower-left-max-height: 25%;
+  --flower-left-top: 58%;
+  --flower-left-left: 38%;
+  --flower-left-transform: translate(-50%, -50%);
+
+  --flower-right-max-width: 25%;
+  --flower-right-max-height: 25%;
+  --flower-right-top: 58%;
+  --flower-right-right: 38%;
+  --flower-right-left: auto;
+  --flower-right-transform: translate(50%, -50%);
+
+  --bird-profiles-max-width: 55%;
+  --bird-profiles-max-height: 55%;
+  --bird-profiles-top: 51%;
+  --bird-profiles-left: 50%;
+  --bird-profiles-transform: translate(-50%, -50%);
+
+  --bird-badges-max-width: 55%;
+  --bird-badges-max-height: 55%;
+  --bird-badges-top: 50%;
+  --bird-badges-left: 50%;
+  --bird-badges-transform: translate(-50%, -50%);
+
+  --text-max-width: 36%;
+  --text-bottom: 1%;
+  --text-left: 50%;
+  --text-transform: translateX(-50%);
+
+  --seal-max-width: 10%;
+  --seal-top: 4%;
+  --seal-left: 50%;
+  --seal-transform: translateX(-50%);
+
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 1. bg – z-index 0 */
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.bg img {
+  width: var(--bg-width);
+  height: var(--bg-height);
+  object-fit: var(--bg-object-fit);
+}
+
+/* 2. border and banner – z-index 1 */
+.borderAndBanner {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.borderAndBanner .border {
+  position: absolute;
+  max-width: var(--border-max-width);
+  max-height: var(--border-max-height);
+  top: var(--border-top);
+  left: var(--border-left);
+  transform: var(--border-transform);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  z-index: 1;
+}
+
+.borderAndBanner .banner {
+  position: absolute;
+  max-width: var(--banner-max-width);
+  max-height: var(--banner-max-height);
+  top: var(--banner-top);
+  left: var(--banner-left);
+  transform: var(--banner-transform);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  z-index: 0;
+}
+
+/* 3. center people, center heart, flower left, flower right – z-index 2 */
+.centerGroup {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.centerGroup img {
+  position: absolute;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.centerPeople {
+  max-width: var(--center-people-max-width);
+  max-height: var(--center-people-max-height);
+  top: var(--center-people-top);
+  left: var(--center-people-left);
+  transform: var(--center-people-transform);
+  z-index: 2;
+}
+
+.centerHeart {
+  max-width: var(--center-heart-max-width);
+  max-height: var(--center-heart-max-height);
+  top: var(--center-heart-top);
+  left: var(--center-heart-left);
+  transform: var(--center-heart-transform);
+  z-index: 5;
+}
+
+.flowerLeft {
+  max-width: var(--flower-left-max-width);
+  max-height: var(--flower-left-max-height);
+  top: var(--flower-left-top);
+  left: var(--flower-left-left);
+  right: auto;
+  transform: var(--flower-left-transform);
+  margin: 0;
+  z-index: 10;
+}
+
+.flowerRight {
+  max-width: var(--flower-right-max-width);
+  max-height: var(--flower-right-max-height);
+  top: var(--flower-right-top);
+  right: var(--flower-right-right);
+  left: var(--flower-right-left);
+  transform: var(--flower-right-transform);
+  margin: 0;
+  z-index: 10;
+}
+
+/* 4. bird profiles – z-index 3 */
+.birdProfiles {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.birdProfiles img {
+  position: absolute;
+  max-width: var(--bird-profiles-max-width);
+  max-height: var(--bird-profiles-max-height);
+  top: var(--bird-profiles-top);
+  left: var(--bird-profiles-left);
+  transform: var(--bird-profiles-transform);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* 5. bird badges – z-index 4 */
+.birdBadges {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.birdBadges img {
+  position: absolute;
+  max-width: var(--bird-badges-max-width);
+  max-height: var(--bird-badges-max-height);
+  top: var(--bird-badges-top);
+  left: var(--bird-badges-left);
+  transform: var(--bird-badges-transform);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* 6. text and seal – z-index 5 */
+.textAndSeal {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.textAndSeal .text {
+  position: absolute;
+  bottom: var(--text-bottom);
+  left: var(--text-left);
+  transform: var(--text-transform);
+  max-width: var(--text-max-width);
+  height: auto;
+  object-fit: contain;
+}
+
+.textAndSeal .seal {
+  position: absolute;
+  top: var(--seal-top);
+  left: var(--seal-left);
+  transform: var(--seal-transform);
+  max-width: var(--seal-max-width);
+  height: auto;
+  object-fit: contain;
+}

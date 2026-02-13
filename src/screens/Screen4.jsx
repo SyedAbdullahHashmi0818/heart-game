@@ -19,7 +19,7 @@ const LINE3 = "now reclaim your reward";
 const TYPING_MS_PER_CHAR = 70;
 const PAUSE_BEFORE_NEXT_MS = 1800;
 
-export default function Screen4() {
+export default function Screen4({ onProceed }) {
   const [animating, setAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [birdMouthOpen, setBirdMouthOpen] = useState(false);
@@ -220,7 +220,10 @@ export default function Screen4() {
           type="button"
           className={styles.rewardButton}
           aria-label="Reclaim your reward"
-          onClick={() => playButtonSound()}
+          onClick={() => {
+            playButtonSound();
+            onProceed?.();
+          }}
         >
           <img src={assetScreen4("reward.png")} alt="Reclaim your reward" />
         </button>
