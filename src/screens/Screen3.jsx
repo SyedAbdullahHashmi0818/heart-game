@@ -4,7 +4,7 @@ import { playCollectSound } from "../utils/sounds";
 import Loader from "../components/Loader";
 import { preloadAllAssets } from "../utils/imagePreloader";
 
-const asset = (name) => `/screen3/${encodeURIComponent(name)}`;
+const asset = (name) => `${import.meta.env.BASE_URL}screen3/${encodeURIComponent(name)}`;
 
 const BASKET_MIN_X = 15;
 const BASKET_MAX_X = 85;
@@ -70,7 +70,7 @@ export default function Screen3({ onComplete }) {
           asset("right arrow key.png"),
         ],
         backgrounds: [
-          "/screen3/sc%203%20bg.png",
+          `${import.meta.env.BASE_URL}screen3/sc%203%20bg.png`,
         ],
       });
       setIsLoading(false);

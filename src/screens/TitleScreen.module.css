@@ -12,7 +12,7 @@
 .bg {
   position: absolute;
   inset: 0;
-  background: url("/screen1/bg.png") center/cover no-repeat;
+  background: url("../screen1/bg.png") center/cover no-repeat;
   z-index: 0;
 }
 
@@ -25,7 +25,7 @@
   max-width: 1400px;
   height: 55%;
   max-height: 65vh;
-  background: url("/screen1/clouds%20b.png") center/contain no-repeat;
+  background: url("../screen1/clouds%20b.png") center/contain no-repeat;
   z-index: 1;
   pointer-events: none;
 }
@@ -39,7 +39,7 @@
   max-width: 1100px;
   height: 80%;
   max-height: 75vh;
-  background: url("/screen1/dragons.png") center/contain no-repeat;
+  background: url("../screen1/dragons.png") center/contain no-repeat;
   z-index: 2;
   pointer-events: none;
 }

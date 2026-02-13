@@ -1,12 +1,16 @@
 {
   "name": "heart-game",
+  "productName": "Heart Game",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "node node_modules/vite/bin/vite.js build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:build": "npm run build && electron-builder",
+    "electron:start": "npm run build && electron ."
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -15,6 +19,26 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
     "vite": "^6.0.3"
+  },
+  "build": {
+    "appId": "com.heartgame.app",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": ["nsis"]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false
+    }
   }
 }

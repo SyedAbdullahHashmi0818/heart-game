@@ -4,7 +4,7 @@ import { playButtonSound } from "../utils/sounds";
 import Loader from "../components/Loader";
 import { preloadAllAssets } from "../utils/imagePreloader";
 
-const asset = (name) => `/screen1/${encodeURIComponent(name)}`;
+const asset = (name) => `${import.meta.env.BASE_URL}screen1/${encodeURIComponent(name)}`;
 
 export default function TitleScreen({ onStart }) {
   const [animating, setAnimating] = useState(false);
@@ -25,9 +25,9 @@ export default function TitleScreen({ onStart }) {
           asset("start button.png"),
         ],
         backgrounds: [
-          "/screen1/bg.png",
-          "/screen1/clouds%20b.png",
-          "/screen1/dragons.png",
+          `${import.meta.env.BASE_URL}screen1/bg.png`,
+          `${import.meta.env.BASE_URL}screen1/clouds%20b.png`,
+          `${import.meta.env.BASE_URL}screen1/dragons.png`,
         ],
       });
       setIsLoading(false);

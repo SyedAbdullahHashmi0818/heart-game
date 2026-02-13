@@ -1,14 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Screen4.module.css";
-import { playButtonSound, playVoiceSound } from "../utils/sounds";
+import {
+  playButtonSound,
+  playVoiceSound,
+  stopVoiceSound,
+} from "../utils/sounds";
 import Loader from "../components/Loader";
 import { preloadAllAssets } from "../utils/imagePreloader";
 
-const assetScreen2 = (name) => `/screen2/${encodeURIComponent(name)}`;
-const assetScreen4 = (name) => `/screen4/${encodeURIComponent(name)}`;
+const assetScreen2 = (name) =>
+  `${import.meta.env.BASE_URL}screen2/${encodeURIComponent(name)}`;
+const assetScreen4 = (name) =>
+  `${import.meta.env.BASE_URL}screen4/${encodeURIComponent(name)}`;
 
 const LINE1 = "Congratulations on finishing the trials";
-const LINE2 = "truly a master of collecting flowers and hearts in a basket";
+const LINE2 = "truly a master of collecting bouquet and hearts in a basket";
 const LINE3 = "now reclaim your reward";
 const TYPING_MS_PER_CHAR = 70;
 const PAUSE_BEFORE_NEXT_MS = 1800;
@@ -27,7 +33,7 @@ export default function Screen4() {
   // Preload all assets
   useEffect(() => {
     let animationFrameId = null;
-    
+
     const loadAssets = async () => {
       await preloadAllAssets({
         images: [
@@ -41,9 +47,7 @@ export default function Screen4() {
           assetScreen4("rabbit right.png"),
           assetScreen4("reward.png"),
         ],
-        backgrounds: [
-          "/screen3/sc%203%20bg.png",
-        ],
+        backgrounds: [`${import.meta.env.BASE_URL}screen3/sc%203%20bg.png`],
       });
       setIsLoading(false);
       // Start animation after a brief delay
@@ -53,7 +57,7 @@ export default function Screen4() {
     };
 
     loadAssets();
-    
+
     return () => {
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
@@ -72,7 +76,10 @@ export default function Screen4() {
   }, [phase]);
 
   const lines = { line1: LINE1, line2: LINE2, line3: LINE3 };
-  const currentText = phase === "line1" || phase === "line2" || phase === "line3" ? lines[phase] : "";
+  const currentText =
+    phase === "line1" || phase === "line2" || phase === "line3"
+      ? lines[phase]
+      : "";
 
   // Type current line letter by letter, then advance or show reward
   useEffect(() => {
@@ -110,7 +117,10 @@ export default function Screen4() {
       }
       return;
     }
-    const tick = setTimeout(() => setVisibleLength((n) => n + 1), TYPING_MS_PER_CHAR);
+    const tick = setTimeout(
+      () => setVisibleLength((n) => n + 1),
+      TYPING_MS_PER_CHAR,
+    );
     return () => clearTimeout(tick);
   }, [phase, visibleLength, currentText]);
 
@@ -124,7 +134,10 @@ export default function Screen4() {
     }
     // Play voice sound when bird starts talking
     playVoiceSound();
-    mouthIntervalRef.current = setInterval(() => setBirdMouthOpen((prev) => !prev), 120);
+    mouthIntervalRef.current = setInterval(
+      () => setBirdMouthOpen((prev) => !prev),
+      120,
+    );
     return () => {
       if (mouthIntervalRef.current) clearInterval(mouthIntervalRef.current);
       mouthIntervalRef.current = null;
@@ -133,10 +146,14 @@ export default function Screen4() {
 
   useEffect(() => {
     const len = currentText.length;
-    if ((phase === "line1" || phase === "line2" || phase === "line3") && visibleLength >= len) {
+    if (
+      (phase === "line1" || phase === "line2" || phase === "line3") &&
+      visibleLength >= len
+    ) {
       if (mouthIntervalRef.current) clearInterval(mouthIntervalRef.current);
       mouthIntervalRef.current = null;
       setBirdMouthOpen(false);
+      stopVoiceSound();
     }
   }, [phase, visibleLength, currentText]);
 
@@ -161,7 +178,9 @@ export default function Screen4() {
       </div>
       <div className={styles.birdClose}>
         <img
-          src={assetScreen2(birdMouthOpen ? "sc2 bird open.png" : "sc2 bird close.png")}
+          src={assetScreen2(
+            birdMouthOpen ? "sc2 bird open.png" : "sc2 bird close.png",
+          )}
           alt=""
           aria-hidden
         />
@@ -173,7 +192,9 @@ export default function Screen4() {
             <p className={styles.bannerLine}>
               {bannerContent}
               {showCursor && (
-                <span className={styles.cursor} aria-hidden>|</span>
+                <span className={styles.cursor} aria-hidden>
+                  |
+                </span>
               )}
             </p>
           )}

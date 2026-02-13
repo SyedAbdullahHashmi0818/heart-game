@@ -12,7 +12,7 @@
 .bg {
   position: absolute;
   inset: 0;
-  background: url("/screen2/sc2 bg.png") center/cover no-repeat;
+  background: url("../screen2/sc2 bg.png") center/cover no-repeat;
   z-index: 0;
 }
 
