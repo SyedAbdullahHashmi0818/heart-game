@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Heart Game</string>
+    <string name="title_activity_main">Heart Game</string>
+    <string name="package_name">com.heartgame.app</string>
+    <string name="custom_url_scheme">com.heartgame.app</string>
+</resources>

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 
 const MAIN_MUSIC = "audio/music.mpeg";
 const SCREEN5_MUSIC = "audio/nothing else matters.mpeg";
-const VOLUME = 0.15;
+const VOLUME = 0.3;
 
 export default function MusicPlayer() {
   const location = useLocation();
@@ -27,11 +27,14 @@ export default function MusicPlayer() {
 
     const tryPlay = (audio) => {
       if (!audio) return;
-      audio.play().then(() => {
-        hasStartedRef.current = true;
-      }).catch((err) => {
-        console.log("Music autoplay blocked:", err);
-      });
+      audio
+        .play()
+        .then(() => {
+          hasStartedRef.current = true;
+        })
+        .catch((err) => {
+          console.log("Music autoplay blocked:", err);
+        });
     };
 
     const handleInteraction = () => {

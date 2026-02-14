@@ -5,6 +5,9 @@ import { preloadAllAssets } from "../utils/imagePreloader";
 
 const asset = (name) =>
   `${import.meta.env.BASE_URL}screen5/${encodeURIComponent(name)}`;
+// Side figures may be in "screen 5" folder (with space) – try that path too
+const assetScreen5Folder = (name) =>
+  `${import.meta.env.BASE_URL}screen%205/${encodeURIComponent(name)}`;
 
 const STEP_MS = 1300; // delay between each layer appearing
 
@@ -30,7 +33,12 @@ export default function Screen5() {
           asset("center heart.png"),
           asset("flower left.png"),
           asset("flower right.png"),
-          asset("bird profiles.png"),
+          asset("rabbit left.png"),
+          asset("crow right.png"),
+          asset("crow rigth.png"),
+          assetScreen5Folder("rabbit left.png"),
+          assetScreen5Folder("crow right.png"),
+          assetScreen5Folder("crow rigth.png"),
           asset("bird bagde.png"),
           asset("text.png"),
           asset("seal.png"),
@@ -90,9 +98,33 @@ export default function Screen5() {
         <img src={asset("bird bagde.png")} alt="" />
       </div>
 
-      {/* 5. bird profiles */}
-      <div className={`${styles.birdProfiles} ${visible.birdProfiles ? styles.visible : ""}`} aria-hidden>
-        <img src={asset("bird profiles.png")} alt="" />
+      {/* 5. rabbit left + bird/crow right (in place of bird profiles) */}
+      <div className={`${styles.sideFigures} ${visible.birdProfiles ? styles.visible : ""}`} aria-hidden>
+        <img
+          src={asset("rabbit left.png")}
+          alt=""
+          className={styles.rabbitLeft}
+          onError={(e) => {
+            if (e.target.dataset.tried !== "1") {
+              e.target.dataset.tried = "1";
+              e.target.src = assetScreen5Folder("rabbit left.png");
+            }
+          }}
+        />
+        <img
+          src={asset("crow rigth.png")}
+          alt=""
+          className={styles.crowRight}
+          onError={(e) => {
+            if (e.target.dataset.tried !== "1") {
+              e.target.dataset.tried = "1";
+              e.target.src = asset("crow right.png");
+            } else if (e.target.dataset.tried2 !== "1") {
+              e.target.dataset.tried2 = "1";
+              e.target.src = assetScreen5Folder("crow rigth.png");
+            }
+          }}
+        />
       </div>
 
       {/* 6. text and seal */}

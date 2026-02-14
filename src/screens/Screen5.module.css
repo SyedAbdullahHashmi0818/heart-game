@@ -1,4 +1,4 @@
-/* Screen 5 – layered in index order: bg, border+banner, center group, bird profiles, bird badges, text+seal */
+/* Screen 5 – layered in index order: bg, border+banner, center group, side figures (rabbit left, crow right), bird badges, text+seal */
 /* Tweak size and position below; z-index is left unchanged. */
 
 .screen {
@@ -43,11 +43,19 @@
   --flower-right-left: auto;
   --flower-right-transform: translate(50%, -50%);
 
-  --bird-profiles-max-width: 55%;
-  --bird-profiles-max-height: 55%;
-  --bird-profiles-top: 51%;
-  --bird-profiles-left: 50%;
-  --bird-profiles-transform: translate(-50%, -50%);
+  /* Rabbit (left) – adjust position/size here */
+  --rabbit-left-max-width: 9%;
+  --rabbit-left-max-height: auto;
+  --rabbit-left-top: 51.75%;
+  --rabbit-left-left: 23.75%;
+  --rabbit-left-transform: translateY(-50%);
+
+  /* Crow (right) – adjust position/size here */
+  --crow-right-max-width: 10%;
+  --crow-right-max-height: autp;
+  --crow-right-top: 46.5%;
+  --crow-right-right: 23%;
+  --crow-right-transform: translateY(-30%);
 
   --bird-badges-max-width: 55%;
   --bird-badges-max-height: 55%;
@@ -187,24 +195,40 @@
   z-index: 10;
 }
 
-/* 4. bird profiles – z-index 3 */
-.birdProfiles {
+/* 4. rabbit left + crow right (in place of bird profiles) – above center so they’re visible */
+.sideFigures {
   position: absolute;
   inset: 0;
-  z-index: 4;
+  z-index: 6;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
 }
 
-.birdProfiles img {
+/* Rabbit – position/size via .screen vars above */
+.sideFigures .rabbitLeft {
   position: absolute;
-  max-width: var(--bird-profiles-max-width);
-  max-height: var(--bird-profiles-max-height);
-  top: var(--bird-profiles-top);
-  left: var(--bird-profiles-left);
-  transform: var(--bird-profiles-transform);
+  max-width: var(--rabbit-left-max-width);
+  max-height: var(--rabbit-left-max-height);
+  top: var(--rabbit-left-top);
+  left: var(--rabbit-left-left);
+  right: auto;
+  transform: var(--rabbit-left-transform);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Crow – position/size via .screen vars above */
+.sideFigures .crowRight {
+  position: absolute;
+  max-width: var(--crow-right-max-width);
+  max-height: var(--crow-right-max-height);
+  top: var(--crow-right-top);
+  right: var(--crow-right-right);
+  left: auto;
+  transform: var(--crow-right-transform);
   width: auto;
   height: auto;
   object-fit: contain;
@@ -272,7 +296,7 @@
 .screen .borderAndBanner .banner,
 .screen .centerGroup img,
 .screen .birdBadges,
-.screen .birdProfiles,
+.screen .sideFigures,
 .screen .textAndSeal .text,
 .screen .textAndSeal .seal {
   opacity: 0;
@@ -284,7 +308,7 @@
 .screen .borderAndBanner .banner.visible,
 .screen .centerGroup img.visible,
 .screen .birdBadges.visible,
-.screen .birdProfiles.visible,
+.screen .sideFigures.visible,
 .screen .textAndSeal .text.visible,
 .screen .textAndSeal .seal.visible {
   opacity: 1;
